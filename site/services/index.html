@@ -398,6 +398,19 @@
   }
   .hero-meta span { display: inline-flex; align-items: center; gap: 0.5rem; }
   .hero-meta svg { width: 1.05em; height: 1.05em; color: var(--gold-deep); }
+  /* Phones: the scheduler has to be reachable inside the first screen. Everything
+     above it gets tighter, the headline drops a size, and the three trust lines
+     become one dot-separated row. Nothing is removed. */
+  @media (max-width: 800px) {
+    .hero { padding-top: 2rem; padding-bottom: 1.75rem; }
+    .hero-inner { gap: 1.5rem; }
+    .hero-copy .eyebrow { font-size: 0.75rem; letter-spacing: 0.1em; margin-bottom: 0.7rem; }
+    .hero-copy h1 { font-size: 2.25rem; line-height: 1.15; margin-bottom: 0.9rem; }
+    .hero-copy .lede { font-size: 1.0625rem; line-height: 1.5; margin-bottom: 1.15rem; }
+    .hero-meta { gap: 0.2rem 0; font-size: 0.8125rem; }
+    .hero-meta svg { display: none; }
+    .hero-meta span:not(:last-child)::after { content: "\00B7"; color: var(--gold-deep); font-weight: 700; margin: 0 0.4rem; }
+  }
 
   /* Scheduling card: the one lifted object on the page */
   .sched {
@@ -619,10 +632,15 @@
   .condition-list li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #E8C77A; flex: none; }
   .condition-list li:hover { background: rgba(244, 241, 232, 0.12); border-color: rgba(184, 147, 90, 0.7); transform: translateY(-2px); }
   .conditions .btn { margin-top: 2rem; }
-  /* Phones: heading, paragraph and button only. Desktop adds the pill grid. */
+  /* Phones: heading, paragraph and button only. Desktop adds the pill grid. The
+     pill column is removed from the grid entirely so it leaves no gap below the button. */
   .condition-list { display: none; }
+  .conditions-grid > div:last-child { display: none; }
+  .conditions { padding-bottom: 2.75rem; }
   @media (min-width: 901px) {
     .conditions-grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+    .conditions-grid > div:last-child { display: block; }
+    .conditions { padding-bottom: var(--section); }
     .condition-list { display: flex; }
   }
 
@@ -798,11 +816,13 @@
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 8px 16px rgba(0, 0, 0, 0.10);
   }
   .loc-photo {
-    display: block; width: calc(100% + 2 * var(--lp)); max-width: none;
+    display: block; width: calc(100% + 2 * var(--lp)); max-width: none; height: auto;
     margin: calc(-1 * var(--lp)) calc(-1 * var(--lp)) 1.25rem;
     aspect-ratio: 3 / 2; object-fit: cover; object-position: center;
     background: var(--cream-2);
   }
+  /* Phones: a wide, short proof photo rather than a screen-filling one. */
+  @media (max-width: 800px) { .loc-photo { aspect-ratio: 16 / 9; } }
   .loc-name { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 0.35rem; }
   .loc-name h3 { font-size: var(--step-3); font-weight: 500; }
   .loc-name .since { font-size: 0.8125rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }

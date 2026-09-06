@@ -21,8 +21,7 @@ for (const rel of PAGES) {
   if (/claude\.ai\/code\/artifact/.test(html)) errors.push(`${rel}: still links to a claude.ai artifact`);
   if (/localhost|127\.0\.0\.1/.test(html)) errors.push(`${rel}: references localhost`);
   const ids = new Set([...html.matchAll(/\sid="([^"]+)"/g)].map(m => m[1]));
-  const markup = html.replace(/<script[\s\S]*?<\/script>/g, '');   // selectors in scripts are not links
-  for (const m of markup.matchAll(/href="([^"]+)"/g)) {
+  for (const m of html.matchAll(/href="([^"]+)"/g)) {
     const href = m[1];
     if (/^(https?:|mailto:|tel:|sms:|data:)/.test(href)) continue;
     const [p, hash] = href.split('#');
