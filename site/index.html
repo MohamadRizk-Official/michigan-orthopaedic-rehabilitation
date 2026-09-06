@@ -1151,6 +1151,65 @@
       0 20px 40px rgba(0, 0, 0, 0.08);
   }
 
+  /* ---- Phones: spacing pass. Every screen should show content, not air. ----
+     Section boundaries total about 40px, headings sit 16-24px from what follows,
+     images carry no extra margin, and no section runs on past its last element.
+     Desktop keeps its own rhythm. */
+  @media (max-width: 800px) {
+    .hero { padding-top: 1.5rem; padding-bottom: 1rem; }
+    .hero-inner { gap: 1.25rem; }
+
+    .locations { padding: 1.5rem 0 1rem; }
+    .locations-head { margin-bottom: 1.25rem; }
+    .office-picker { margin-bottom: 1rem; }
+    .loc { --lp: 1.25rem; }
+    .loc-photo { margin-bottom: 1rem; }
+    .loc-name { margin-bottom: 0.25rem; }
+    .loc-where { margin-bottom: 1rem; }
+    .loc dl { margin-bottom: 1rem; }
+
+    .insurance { padding: 0 0 1rem; }
+    .insurance-box { padding: 1.5rem 1.25rem; }
+    .insurance-box h2 { margin-bottom: 0.5rem; }
+    .insurance-logos { gap: 16px 22px; margin: 1.25rem auto 1rem; }
+    .insurance-logo { height: 22px; }
+    .insurance-logo.is-wide { height: 27px; }
+    .insurance-note { margin-top: 0.25rem; }
+
+    .conditions { padding-top: 2.25rem; padding-bottom: 2rem; }
+    .conditions .lede { margin-top: 0.85rem; }
+    .conditions .btn { margin-top: 1.25rem; }
+
+    .services { padding: 1.5rem 0 1rem; }
+    .services-teaser { gap: 1.25rem; }
+    .services-copy .lede { margin-bottom: 1.25rem; }
+    .bubble { margin-top: 1.5rem; }
+
+    .team { padding: 1.5rem 0 1rem; }
+    .team-head { margin-bottom: 1.25rem; }
+    .team-entry > .btn { margin-top: 1.25rem; margin-bottom: 1.25rem; }
+    .team-group { margin-bottom: 1.25rem; }
+    .team-filters { margin-bottom: 1.25rem; }
+    .team-hero { padding-bottom: 0.5rem; }
+    .team-grid { padding-bottom: 0.5rem; }
+
+    .svc-list { margin-top: 0; }
+    .svc-nav { margin-bottom: 1.25rem; }
+
+    .cta { padding-bottom: 1.5rem; }
+    .cta .lede { margin-bottom: 1.25rem; }
+
+    .eyebrow { margin-bottom: 0.75rem; }
+    h2 { margin-bottom: 0.75rem; }
+    .lede { margin-bottom: 1rem; }
+
+    .site-footer { padding: 2.5rem 0 1.25rem; }
+    .footer-grid { gap: 1.5rem; padding-bottom: 1.5rem; }
+    .footer-brand img { margin-bottom: 0.75rem; }
+    .site-footer h4 { margin-bottom: 0.6rem; }
+    .footer-bottom { padding-top: 1rem; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     html.js .reveal, html.js .reveal-stagger > *, html.js .hero-copy > *, html.js .sched, html.js .chips .chip, html.js .wiz-step.is-fresh [data-stagger] { opacity: 1; transform: none; translate: 0 0; scale: 1; transition: none; animation: none; }
