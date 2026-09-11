@@ -367,13 +367,15 @@
   .cta { display: none; }
   .services { order: 4; }
   .team { order: 5; }
+  .reviews { order: 6; }
   @media (min-width: 901px) {
     .services { order: 1; }
     .conditions { order: 2; }
     .locations { order: 3; }
     .team { order: 4; }
-    .insurance { order: 5; }
-    .cta { display: block; order: 6; }
+    .reviews { order: 5; }
+    .insurance { order: 6; }
+    .cta { display: block; order: 7; }
   }
   @media (pointer: coarse) {
     .btn, .chip { transform: none !important; }
@@ -1220,6 +1222,143 @@
     .footer-bottom { padding-top: 1rem; }
   }
 
+  /* ---- External nav item (opens in a new tab) ---- */
+  .nav-links a .ext { width: 0.7em; height: 0.7em; margin-left: 0.3em; vertical-align: 0.02em; opacity: 0.7; }
+  .mobile-menu a .ext { width: 1em; height: 1em; opacity: 0.6; }
+  /* six links plus phone and button: keep them on one line at narrow desktop widths */
+  .nav-links li { flex: none; }
+  .nav-links a { white-space: nowrap; }
+  .nav-phone { white-space: nowrap; }
+  .nav-actions { flex: none; }
+  @media (min-width: 961px) and (max-width: 1180px) {
+    .nav-links { gap: 1.1rem; }
+    .nav-links a { font-size: 0.9375rem; }
+    .nav-phone { display: none; }
+    .nav { gap: 1rem; }
+  }
+  @media (min-width: 961px) and (max-width: 1040px) {
+    .nav-links { gap: 0.85rem; }
+    .nav-links a { font-size: 0.875rem; }
+    .brand img { height: 44px; }
+  }
+
+  /* ---- Patient reviews carousel ---- */
+  .reviews { padding: var(--section) 0; }
+  @media (min-width: 901px) { .team { padding-bottom: 2.5rem; } .reviews { padding-top: 2.5rem; } }
+  .reviews-head { max-width: 40em; margin-bottom: 2rem; }
+  .reviews-head h2 { margin-bottom: 1.1rem; }
+  .rv { position: relative; }
+  .rv-track {
+    list-style: none; margin: 0; padding: 0;
+    position: relative; height: var(--rv-h, 340px);
+    transition: height 320ms var(--ease-out);
+    touch-action: pan-y;
+  }
+  .rv-card {
+    list-style: none; margin: 0;
+    position: absolute; left: 50%; top: 0; width: min(100%, 580px); translate: -50% 0;
+    background: var(--surface);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 18px;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 20px 40px rgba(0, 0, 0, 0.08);
+    transition: transform 560ms var(--ease-out), opacity 420ms var(--ease-std), box-shadow 420ms var(--ease-std);
+    will-change: transform;
+  }
+  .rv-card[data-pos="0"]  { transform: translateX(0) scale(1); opacity: 1; z-index: 3; }
+  .rv-card[data-pos="-1"] { transform: translateX(-80%) scale(0.86); opacity: 0.5; z-index: 2; cursor: pointer; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); }
+  .rv-card[data-pos="1"]  { transform: translateX(80%) scale(0.86); opacity: 0.5; z-index: 2; cursor: pointer; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); }
+  .rv-card[data-pos="-1"]:hover, .rv-card[data-pos="1"]:hover { opacity: 0.75; }
+  .rv-card[data-pos="x"]  { transform: translateX(0) scale(0.8); opacity: 0; z-index: 1; pointer-events: none; visibility: hidden; }
+  .rv-stars {
+    width: 120px; height: 22px; margin-bottom: 0.9rem;
+    background-image: linear-gradient(120deg, var(--gold) 0%, var(--gold) 35%, #F6DE8F 50%, var(--gold) 65%, var(--gold) 100%);
+    background-size: 200% auto;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 24'%3E%3Cpath transform='translate(0 0)' d='M12 2l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L12 17l-6.1 3.5 1.5-6.8L2.2 9l6.9-.7z'/%3E%3Cpath transform='translate(24 0)' d='M12 2l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L12 17l-6.1 3.5 1.5-6.8L2.2 9l6.9-.7z'/%3E%3Cpath transform='translate(48 0)' d='M12 2l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L12 17l-6.1 3.5 1.5-6.8L2.2 9l6.9-.7z'/%3E%3Cpath transform='translate(72 0)' d='M12 2l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L12 17l-6.1 3.5 1.5-6.8L2.2 9l6.9-.7z'/%3E%3Cpath transform='translate(96 0)' d='M12 2l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L12 17l-6.1 3.5 1.5-6.8L2.2 9l6.9-.7z'/%3E%3C/svg%3E") no-repeat left center / contain;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 24'%3E%3Cpath transform='translate(0 0)' d='M12 2l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L12 17l-6.1 3.5 1.5-6.8L2.2 9l6.9-.7z'/%3E%3Cpath transform='translate(24 0)' d='M12 2l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L12 17l-6.1 3.5 1.5-6.8L2.2 9l6.9-.7z'/%3E%3Cpath transform='translate(48 0)' d='M12 2l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L12 17l-6.1 3.5 1.5-6.8L2.2 9l6.9-.7z'/%3E%3Cpath transform='translate(72 0)' d='M12 2l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L12 17l-6.1 3.5 1.5-6.8L2.2 9l6.9-.7z'/%3E%3Cpath transform='translate(96 0)' d='M12 2l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L12 17l-6.1 3.5 1.5-6.8L2.2 9l6.9-.7z'/%3E%3C/svg%3E") no-repeat left center / contain;
+    animation: shiny-sweep 5.2s linear 0.6s infinite;
+  }
+  .rv-quote {
+    margin: 0;
+    font-family: var(--serif); font-size: clamp(1.0625rem, 1.5vw, 1.25rem); line-height: 1.55;
+    color: var(--navy); text-wrap: pretty;
+  }
+  .rv-quote::before { content: "\201C"; color: var(--gold); }
+  .rv-quote::after  { content: "\201D"; color: var(--gold); }
+  .rv-who { margin-top: 1rem; font-size: 0.9375rem; color: var(--ink-2); display: flex; flex-wrap: wrap; gap: 0.35rem 0.6rem; align-items: baseline; }
+  .rv-who strong { color: var(--navy); font-weight: 600; }
+  .rv-who span::before { content: "\00B7"; color: var(--gold-deep); margin-right: 0.6rem; }
+  .rv-ctl { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 1.5rem; }
+  .rv-btn {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: inline-grid; place-items: center;
+    background: var(--surface); border: 1.5px solid var(--rule); color: var(--navy); cursor: pointer;
+    transition: border-color var(--dur-fast) var(--ease-std), background-color var(--dur-fast) var(--ease-std), translate var(--dur-fast) var(--ease-out);
+  }
+  .rv-btn svg { width: 20px; height: 20px; }
+  .rv-btn:hover { border-color: var(--navy); background: rgba(15, 31, 69, 0.04); translate: 0 -1px; }
+  .rv-btn:active { translate: 0 0; background: rgba(15, 31, 69, 0.08); }
+  .rv-dots { display: flex; gap: 6px; }
+  .rv-dots button { width: 28px; height: 28px; padding: 0; background: none; border: 0; cursor: pointer; display: grid; place-items: center; }
+  .rv-dots button::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--rule); transition: background-color var(--dur-fast) var(--ease-std), transform var(--dur-fast) var(--ease-out); }
+  .rv-dots button[aria-current="true"]::before { background: var(--gold); transform: scale(1.3); }
+  .reviews-actions { display: flex; justify-content: center; margin-top: 1.75rem; }
+  .reviews-actions .btn svg.ext { width: 0.9em; height: 0.9em; }
+  @media (max-width: 800px) {
+    .reviews { padding: 1.5rem 0 1rem; }
+    .reviews-head { margin-bottom: 1.25rem; }
+    .rv-card { width: 100%; padding: 1.25rem 1.15rem 1.35rem; border-radius: 16px; }
+    .rv-card[data-pos="-1"] { transform: translateX(-104%) scale(1); opacity: 0; visibility: hidden; pointer-events: none; }
+    .rv-card[data-pos="1"]  { transform: translateX(104%) scale(1); opacity: 0; visibility: hidden; pointer-events: none; }
+    .rv-quote { font-size: 1.0625rem; line-height: 1.55; }
+    .rv-stars { width: 118px; height: 22px; }
+    .rv-ctl { margin-top: 1rem; }
+    .reviews-actions { margin-top: 1.25rem; }
+    .reviews-actions .btn { width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rv-card { transition: opacity 200ms linear; }
+    .rv-stars { animation: none; }
+  }
+
+  /* ---- Careers page ---- */
+  .careers { padding: 0.5rem 0 var(--section); }
+  .role-grid { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; }
+  .role-grid > .role { flex: 0 0 100%; }
+  @media (min-width: 601px) { .role-grid > .role { flex: 0 0 calc((100% - 1rem) / 2); } }
+  @media (min-width: 961px) { .role-grid { gap: 1.25rem; } .role-grid > .role { flex: 0 0 calc((100% - 2.5rem) / 3); } }
+  .role {
+    display: flex; flex-direction: column; gap: 0.5rem; min-width: 0;
+    background: var(--surface); border: 1px solid var(--rule-soft); border-radius: 14px;
+    padding: 1.25rem 1.25rem 1.35rem;
+    box-shadow: 0 2px 10px rgba(15, 31, 69, 0.06);
+    transition: translate 0.3s ease-out, box-shadow 0.3s ease-out;
+  }
+  .role:hover { translate: 0 -4px; box-shadow: 0 14px 34px -20px rgba(15, 31, 69, 0.35), 0 2px 10px rgba(15, 31, 69, 0.06); }
+  .role h3 { font-size: var(--step-1); font-weight: 500; padding-bottom: 0; }
+  .role p { color: var(--ink-2); font-size: 0.9375rem; line-height: 1.5; }
+  .role .btn { margin-top: auto; align-self: flex-start; padding: 0.8rem 1.2rem; font-size: 1rem; }
+  .apply { margin-top: clamp(2.5rem, 6vw, 4rem); max-width: 56em; scroll-margin-top: calc(84px + 1rem); }
+  .apply h2 { font-size: var(--step-3); margin-bottom: 0.6rem; }
+  .apply .lede { margin-bottom: 1.25rem; }
+  .apply-role { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9375rem; color: var(--ink-2); margin-bottom: 1rem; min-height: 1.5em; }
+  .apply-role strong { color: var(--navy); }
+  .apply-embed {
+    background: var(--surface); border: 1px solid var(--rule-soft); border-radius: 14px;
+    overflow: hidden; min-height: 280px;
+    box-shadow: 0 2px 10px rgba(15, 31, 69, 0.06);
+  }
+  .apply-embed iframe { display: block; width: 100%; max-width: 100%; border: 0; min-height: 1100px; }
+  .apply-note { padding: 1.5rem; color: var(--ink-2); line-height: 1.55; }
+  .apply-note a { color: var(--navy); font-weight: 600; }
+  @media (max-width: 800px) {
+    .careers { padding-bottom: 1rem; }
+    .role { padding: 1.1rem 1.1rem 1.2rem; }
+    .role .btn { align-self: stretch; }
+    .apply { margin-top: 2rem; }
+    .apply-embed iframe { min-height: 1300px; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     html.js .reveal, html.js .reveal-stagger > *, html.js .hero-copy > *, html.js .sched, html.js .chips .chip, html.js .wiz-step.is-fresh [data-stagger] { opacity: 1; transform: none; translate: 0 0; scale: 1; transition: none; animation: none; }
@@ -1257,10 +1396,11 @@
         <li><a href="#team">Our team</a></li>
         <li><a href="#locations">Locations</a></li>
         <li><a href="#insurance">Insurance</a></li>
+        <li><a href="/careers">Careers</a></li>
+        <li><a href="#" target="_blank" rel="noopener">Surgeons<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg><span class="sr-only"> (opens in a new tab)</span></a></li>
       </ul>
     </nav>
     <div class="nav-actions">
-      <a class="nav-phone" href="tel:+12485663525">(248) 566-3525</a>
       <a class="btn btn-primary" href="#schedule" data-magnet>Schedule</a>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu"><span></span><span></span><span></span></button>
     </div>
@@ -1271,6 +1411,8 @@
     <a href="#insurance">Insurance</a>
     <a href="/services">What we treat</a>
     <a href="#team">Our team</a>
+    <a href="/careers">Careers</a>
+    <a href="#" target="_blank" rel="noopener">Surgeons <small>opens in a new tab</small></a>
     <a href="tel:+12485663525">Call Royal Oak <small>(248) 566-3525</small></a>
     <a href="tel:+12488176110">Call Troy <small>(248) 817-6110</small></a>
   </nav>
@@ -1410,6 +1552,79 @@
     </div>
   </section>
 
+  <!-- Patient reviews -->
+  <section class="reviews" id="reviews" aria-labelledby="reviews-title">
+    <div class="wrap">
+      <div class="reviews-head reveal">
+        <p class="eyebrow">Patient reviews</p>
+        <h2 id="reviews-title">What our patients say.</h2>
+        <p class="lede">In their own words, from people treated at our Royal Oak and Troy offices.</p>
+      </div>
+      <div class="rv reveal" id="rv" aria-roledescription="carousel" aria-label="Patient reviews">
+        <ul class="rv-track" id="rv-track" aria-live="polite">
+        <li class="rv-card" data-pos="x" data-i="0" aria-roledescription="slide" aria-label="Review 1 of 10">
+          <div class="rv-stars" role="img" aria-label="5 out of 5 stars"></div>
+          <blockquote class="rv-quote">Because I was always seen personally by Tim or Jeannette, they were able to closely monitor my performance and adjust my treatment accordingly. They made me feel like I was the most important patient at the clinic.</blockquote>
+          <p class="rv-who"><strong>B.A.</strong></p>
+        </li>
+        <li class="rv-card" data-pos="x" data-i="1" aria-roledescription="slide" aria-label="Review 2 of 10">
+          <div class="rv-stars" role="img" aria-label="5 out of 5 stars"></div>
+          <blockquote class="rv-quote">My appointments always began promptly, sessions were flexible, and atmosphere was relaxed yet very professional. I am very pleased with my results and gained complete functional use of my arm.</blockquote>
+          <p class="rv-who"><strong>M.M.</strong><span>Bloomfield, MI</span></p>
+        </li>
+        <li class="rv-card" data-pos="x" data-i="2" aria-roledescription="slide" aria-label="Review 3 of 10">
+          <div class="rv-stars" role="img" aria-label="5 out of 5 stars"></div>
+          <blockquote class="rv-quote">When I started my therapy sessions I never thought I would be able to take care of my needs. It was quite a transformation! The entire staff at Michigan Orthopedic Rehabilitation demonstrated total commitment and created a caring environment.</blockquote>
+          <p class="rv-who"><strong>D.B.</strong><span>Southfield, MI</span></p>
+        </li>
+        <li class="rv-card" data-pos="x" data-i="3" aria-roledescription="slide" aria-label="Review 4 of 10">
+          <div class="rv-stars" role="img" aria-label="5 out of 5 stars"></div>
+          <blockquote class="rv-quote">From my first visit to the last, the entire staff showed concern about me, and made my health their number one priority. My rehabbed shoulder feels 99% back to normal, and in just 5 short months!</blockquote>
+          <p class="rv-who"><strong>C.R.</strong><span>Sterling Heights, MI</span></p>
+        </li>
+        <li class="rv-card" data-pos="x" data-i="4" aria-roledescription="slide" aria-label="Review 5 of 10">
+          <div class="rv-stars" role="img" aria-label="5 out of 5 stars"></div>
+          <blockquote class="rv-quote">These are professionals who truly care about patients and get excited to see progress in their recovery. The atmosphere at the office is both friendly and welcoming.</blockquote>
+          <p class="rv-who"><strong>J.B.</strong><span>Bloomfield Hills, MI</span></p>
+        </li>
+        <li class="rv-card" data-pos="x" data-i="5" aria-roledescription="slide" aria-label="Review 6 of 10">
+          <div class="rv-stars" role="img" aria-label="5 out of 5 stars"></div>
+          <blockquote class="rv-quote">When I originally arrived I could not hold a pencil, today I have full control of my hand and fingers. I can write fluently, regained full range of motion of my shoulder, and can bend my elbow almost all the way to my nose.</blockquote>
+          <p class="rv-who"><strong>P.K.</strong><span>Beverly Hills, MI</span></p>
+        </li>
+        <li class="rv-card" data-pos="x" data-i="6" aria-roledescription="slide" aria-label="Review 7 of 10">
+          <div class="rv-stars" role="img" aria-label="5 out of 5 stars"></div>
+          <blockquote class="rv-quote">I came here with practically no movement in my arm, and after three months I certainly can see a great improvement. It hasn’t been easy, but it was well worth it.</blockquote>
+          <p class="rv-who"><strong>B.S.</strong></p>
+        </li>
+        <li class="rv-card" data-pos="x" data-i="7" aria-roledescription="slide" aria-label="Review 8 of 10">
+          <div class="rv-stars" role="img" aria-label="5 out of 5 stars"></div>
+          <blockquote class="rv-quote">It is very important to have a good rehab center; one you can trust to get you back on your feet. I would recommend Michigan Orthopedic Rehab center.</blockquote>
+          <p class="rv-who"><strong>F.D.</strong><span>Berkley, MI</span></p>
+        </li>
+        <li class="rv-card" data-pos="x" data-i="8" aria-roledescription="slide" aria-label="Review 9 of 10">
+          <div class="rv-stars" role="img" aria-label="5 out of 5 stars"></div>
+          <blockquote class="rv-quote">The staff at MI Orthopedic Rehab is very knowledgeable and took my limitations very seriously. Tim and Jen Wiater sincerely cared about my recovery and I whole-heartedly thank them for their great work.</blockquote>
+          <p class="rv-who"><strong>R.P.</strong></p>
+        </li>
+        <li class="rv-card" data-pos="x" data-i="9" aria-roledescription="slide" aria-label="Review 10 of 10">
+          <div class="rv-stars" role="img" aria-label="5 out of 5 stars"></div>
+          <blockquote class="rv-quote">I have been to a few physical therapy centers prior to coming here and I would recommend MI Orthopedic Rehab to as many people as I can.</blockquote>
+          <p class="rv-who"><strong>E.C.</strong><span>Clawson, MI</span></p>
+        </li>
+        </ul>
+        <div class="rv-ctl">
+          <button class="rv-btn" type="button" id="rv-prev" aria-label="Previous review"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+          <div class="rv-dots" id="rv-dots" role="tablist" aria-label="Choose a review"></div>
+          <button class="rv-btn" type="button" id="rv-next" aria-label="Next review"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
+      <div class="reviews-actions reveal">
+        <a class="btn btn-outline" href="#" target="_blank" rel="noopener">See our reviews on Google <svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+      </div>
+    </div>
+  </section>
+
   <!-- Locations -->
   <section class="locations" id="locations" aria-labelledby="locations-title">
     <div class="wrap">
@@ -1448,7 +1663,7 @@
             </dd>
           </dl>
           <div class="loc-actions">
-            <a class="btn btn-primary" href="tel:+12485663525">Call Royal Oak</a>
+            <a class="btn btn-primary" href="tel:+12485663525" data-magnet>Call Royal Oak</a>
             <a class="btn btn-outline" href="https://www.google.com/maps/search/?api=1&query=4401+W+13+Mile+Rd+Royal+Oak+MI+48073" target="_blank" rel="noopener">Get directions</a>
           </div>
         </article>
@@ -1474,7 +1689,7 @@
             </dd>
           </dl>
           <div class="loc-actions">
-            <a class="btn btn-primary" href="tel:+12488176110">Call Troy</a>
+            <a class="btn btn-primary" href="tel:+12488176110" data-magnet>Call Troy</a>
             <a class="btn btn-outline" href="https://www.google.com/maps/search/?api=1&query=6024+Livernois+Rd+Troy+MI+48098" target="_blank" rel="noopener">Get directions</a>
           </div>
         </article>
@@ -1566,6 +1781,7 @@
           <li><a href="#services">Services</a></li>
           <li><a href="#team">Our team</a></li>
           <li><a href="#insurance">Insurance</a></li>
+          <li><a href="/careers">Careers</a></li>
           <li><a href="https://app.arketa.co/iframe/bodymechanics/schedule?template=dcXju1sIFH11eHbvKOmE&showPrivate=true" target="_blank" rel="noopener">Body Mechanics Pilates Studio</a></li>
         </ul>
       </div>
@@ -2102,6 +2318,62 @@
         el.style.transform = '';
       });
     });
+  })();
+
+
+  // Patient reviews: one card forward, neighbours tucked behind; auto-advance every 5s,
+  // paused while hovered, focused or touched; swipe on touch devices; arrow keys.
+  (function () {
+    var root = document.getElementById('rv'); if (!root) return;
+    var track = document.getElementById('rv-track'), cards = [].slice.call(track.children);
+    var dots = document.getElementById('rv-dots'), n = cards.length, i = 0, timer = null, paused = false;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    cards.forEach(function (c, k) {
+      var b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab');
+      b.setAttribute('aria-label', 'Review ' + (k + 1)); b.addEventListener('click', function () { go(k, true); });
+      dots.appendChild(b);
+    });
+    function fit() { var a = cards[i]; if (a) track.style.height = a.offsetHeight + 'px'; }
+    function render() {
+      cards.forEach(function (c, k) {
+        var d = (k - i + n) % n; if (d > n / 2) d -= n;
+        c.dataset.pos = d === 0 ? '0' : d === -1 ? '-1' : d === 1 ? '1' : 'x';
+        c.setAttribute('aria-hidden', d === 0 ? 'false' : 'true');
+      });
+      [].forEach.call(dots.children, function (b, k) { b.setAttribute('aria-current', k === i ? 'true' : 'false'); });
+      fit();
+    }
+    function go(k, user) { i = (k + n) % n; render(); if (user) restart(); }
+    function tick() { if (!paused) go(i + 1); }
+    function restart() { if (reduce) return; clearInterval(timer); timer = setInterval(tick, 10000); }
+    cards.forEach(function (c) {
+      c.addEventListener('click', function () {
+        if (c.dataset.pos === '-1') go(i - 1, true);
+        else if (c.dataset.pos === '1') go(i + 1, true);
+      });
+    });
+    document.getElementById('rv-prev').addEventListener('click', function () { go(i - 1, true); });
+    document.getElementById('rv-next').addEventListener('click', function () { go(i + 1, true); });
+    root.addEventListener('mouseenter', function () { paused = true; });
+    root.addEventListener('mouseleave', function () { paused = false; });
+    root.addEventListener('focusin', function () { paused = true; });
+    root.addEventListener('focusout', function () { paused = false; });
+    root.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(i - 1, true); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(i + 1, true); }
+    });
+    // swipe
+    var sx = null, sy = null;
+    track.addEventListener('pointerdown', function (e) { sx = e.clientX; sy = e.clientY; paused = true; }, { passive: true });
+    track.addEventListener('pointerup', function (e) {
+      if (sx === null) return;
+      var dx = e.clientX - sx, dy = e.clientY - sy; sx = sy = null; paused = false;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) go(dx < 0 ? i + 1 : i - 1, true);
+    }, { passive: true });
+    track.addEventListener('pointercancel', function () { sx = sy = null; paused = false; });
+    window.addEventListener('resize', fit);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+    render(); restart();
   })();
 
   // Mobile menu.

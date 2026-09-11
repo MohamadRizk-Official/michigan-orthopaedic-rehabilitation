@@ -8,6 +8,7 @@ Three self-contained HTML pages. No framework, no server code, no environment va
 | `/`         | `site/index.html`          |
 | `/services` | `site/services/index.html` |
 | `/team`     | `site/team/index.html`     |
+| `/careers`  | `site/careers/index.html`  |
 
 Images are embedded in the pages as data URIs, so each page is a single file.
 External resources: Google Fonts (Source Serif 4, Public Sans) and three.js r128 from cdnjs

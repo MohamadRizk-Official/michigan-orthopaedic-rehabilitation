@@ -8,8 +8,8 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const SRC = path.join(ROOT, 'site');
 const OUT = path.join(ROOT, 'public');
-const PAGES = ['index.html', 'services/index.html', 'team/index.html'];
-const ROUTES = new Set(['/', '/services', '/team']);
+const PAGES = ['index.html', 'services/index.html', 'team/index.html', 'careers/index.html'];
+const ROUTES = new Set(['/', '/services', '/team', '/careers']);
 const errors = [];
 
 for (const rel of PAGES) {
