@@ -1314,6 +1314,34 @@
   .nav-links a[aria-current="page"], .nav-links a.is-current { color: var(--navy); }
   .nav-links a[aria-current="page"]::after, .nav-links a.is-current::after { transform: scaleX(1); }
   .mobile-menu a[aria-current="page"] { color: var(--navy); box-shadow: inset 3px 0 0 var(--gold); }
+
+  /* ---- Pilates pricing: tabs by pack type, an instructor switch for private and semi-private ---- */
+  [data-pricing] [hidden] { display: none !important; }
+  .price-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; margin-bottom: 1.25rem; }
+  @media (min-width: 601px) { .price-tabs { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.75rem; } }
+  .price-tabs button {
+    font: inherit; font-size: 0.9375rem; font-weight: 600; color: var(--ink-2); cursor: pointer;
+    background: var(--surface); border: 1.5px solid var(--rule); border-radius: var(--radius);
+    padding: 0.8rem 0.75rem; min-height: 48px;
+    transition: background-color var(--dur-fast) var(--ease-std), border-color var(--dur-fast) var(--ease-std), color var(--dur-fast) var(--ease-std);
+  }
+  .price-tabs button:hover { border-color: var(--navy); color: var(--navy); }
+  .price-tabs button[aria-selected="true"] { background: var(--navy); border-color: var(--navy); color: #fff; }
+  .price-tabs button:focus-visible, .instructor-pick button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  .instructor-pick { max-width: 34rem; margin: 0 auto 1.5rem; }
+  .instructor-pick .pick-label { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; color: var(--ink-3); text-align: center; margin-bottom: 0.5rem; }
+  .instructor-pick .seg { margin-bottom: 0; }
+
+  /* cards wrap into centred rows, so a pack of five reads 3 + 2 rather than 4 + 1 */
+  .plan-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; }
+  .plan-grid > .plan { flex: 0 0 100%; }
+  @media (min-width: 601px)  { .plan-grid > .plan { flex-basis: calc((100% - 1rem) / 2); } }
+  @media (min-width: 1001px) { .plan-grid { gap: 1.25rem; } .plan-grid > .plan { flex-basis: calc((100% - 2.5rem) / 3); } }
+
+  .price-note { text-align: center; font-size: 0.875rem; color: var(--ink-3); margin-top: 1.25rem; }
+  @keyframes panel-in { from { opacity: 0; translate: 0 6px; } to { opacity: 1; translate: 0 0; } }
+  @media (prefers-reduced-motion: no-preference) { .price-panel.is-fresh { animation: panel-in 260ms var(--ease-out) both; } }
   @media (prefers-reduced-motion: reduce) {
     .rv-card { transition: opacity 200ms linear; }
     .rv-stars { animation: none; }
@@ -1447,17 +1475,32 @@
       <div class="team-head reveal">
         <p class="eyebrow">Pricing</p>
         <h2 id="pricing-title">Packs and classes.</h2>
-        <p class="lede">Buy a single class or save with a pack. Group Reformer packs work for any Group Reformer class on the schedule.</p>
+        <p class="lede">Buy a single session or save with a pack. Choose from group classes, private and semi-private sessions, or a gift card.</p>
       </div>
-      <ul class="plan-grid reveal reveal-stagger">
+      <div class="pricing reveal" data-pricing>
+        <div class="price-tabs" role="tablist" aria-label="Type of pack">
+          <button type="button" role="tab" id="pt-classes" aria-controls="pp-classes" aria-selected="true" tabindex="0">Classes</button>
+          <button type="button" role="tab" id="pt-private" aria-controls="pp-private" aria-selected="false" tabindex="-1">Private</button>
+          <button type="button" role="tab" id="pt-semi" aria-controls="pp-semi" aria-selected="false" tabindex="-1">Semi-private</button>
+          <button type="button" role="tab" id="pt-gift" aria-controls="pp-gift" aria-selected="false" tabindex="-1">Gift card</button>
+        </div>
+        <div class="instructor-pick" data-instructor-pick>
+          <p class="pick-label" id="instructor-label">Instructor</p>
+          <div class="seg" role="group" aria-labelledby="instructor-label">
+            <button type="button" data-level="l1" aria-pressed="true">Level 1 instructor</button>
+            <button type="button" data-level="pta" aria-pressed="false">PTA instructor<small>Physical Therapist Assistant</small></button>
+          </div>
+        </div>
+        <div class="price-panel" role="tabpanel" id="pp-classes" aria-labelledby="pt-classes">
+      <ul class="plan-grid">
         <li class="plan">
           <span class="tag">New clients</span>
-          <h3>Intro Pack</h3>
+          <h3>Intro Pilates Session</h3>
           <p class="price">$0.00</p>
           <p class="pack">1 pack</p>
           <hr>
-          <div class="plan-body"><p>New to Body Mechanics? Enjoy a 30-minute private Pilates intro session on us.</p></div>
-          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/schedule?template=dcXju1sIFH11eHbvKOmE&amp;showPrivate=true" target="_blank" rel="noopener" data-magnet>Buy Now</a>
+          <div class="plan-body"><p>New to Body Mechanics? Enjoy a 30-minute private Pilates intro session on us!</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
         </li>
         <li class="plan">
           <h3>Group Reformer</h3>
@@ -1465,7 +1508,7 @@
           <p class="pack">1 pack</p>
           <hr>
           <div class="plan-body"><p>Redeemable for 1 Group Reformer class.</p><p class="exp">Expires 30 days from purchase</p></div>
-          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/schedule?template=dcXju1sIFH11eHbvKOmE&amp;showPrivate=true" target="_blank" rel="noopener" data-magnet>Buy Now</a>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
         </li>
         <li class="plan">
           <h3>Group Reformer</h3>
@@ -1473,17 +1516,239 @@
           <p class="pack">5 pack</p>
           <hr>
           <div class="plan-body"><p>Redeemable for all Group Reformer classes.</p><p class="exp">Expires 90 days from purchase</p></div>
-          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/schedule?template=dcXju1sIFH11eHbvKOmE&amp;showPrivate=true" target="_blank" rel="noopener" data-magnet>Buy Now</a>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
         </li>
         <li class="plan">
           <h3>Group Reformer</h3>
           <p class="price">$350.00</p>
           <p class="pack">10 pack</p>
           <hr>
-          <div class="plan-body"><p>Redeemable for all Group Reformer classes.</p><p class="exp">Expires 90 days from purchase</p></div>
-          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/schedule?template=dcXju1sIFH11eHbvKOmE&amp;showPrivate=true" target="_blank" rel="noopener" data-magnet>Buy Now</a>
+          <div class="plan-body"><p>Redeemable for all Group Reformer classes.</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+        <li class="plan">
+          <h3>Balance Class</h3>
+          <p class="price">$20.00</p>
+          <p class="pack">1 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for all Balance Classes.</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+        <li class="plan">
+          <h3>Balance Class</h3>
+          <p class="price">$90.00</p>
+          <p class="pack">6 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for all Balance Classes.</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
         </li>
       </ul>
+        </div>
+        <div class="price-panel" role="tabpanel" id="pp-private" aria-labelledby="pt-private">
+      <ul class="plan-grid" data-level="l1">
+        <li class="plan">
+          <span class="tag">Level 1 instructor</span>
+          <h3>Private session</h3>
+          <p class="price">$85.00</p>
+          <p class="pack">1 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for 1 private session with a Level 1 Instructor.</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+        <li class="plan">
+          <span class="tag">Level 1 instructor</span>
+          <h3>Private session</h3>
+          <p class="price">$410.00</p>
+          <p class="pack">5 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for 5 private sessions with a Level 1 Instructor.</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+        <li class="plan">
+          <span class="tag">Level 1 instructor</span>
+          <h3>Private session</h3>
+          <p class="price">$790.00</p>
+          <p class="pack">10 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for 10 private sessions with a Level 1 Instructor.</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+        <li class="plan">
+          <span class="tag">Level 1 instructor</span>
+          <h3>Private session</h3>
+          <p class="price">$1,155.00</p>
+          <p class="pack">15 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for 15 private sessions with a Level 1 Instructor.</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+        <li class="plan">
+          <span class="tag">Level 1 instructor</span>
+          <h3>Private session</h3>
+          <p class="price">$1,500.00</p>
+          <p class="pack">20 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for 20 private sessions with a Level 1 Instructor.</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+      </ul>
+      <ul class="plan-grid" data-level="pta">
+        <li class="plan">
+          <span class="tag">PTA instructor</span>
+          <h3>Private session</h3>
+          <p class="price">$95.00</p>
+          <p class="pack">1 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for 1 private Pilates session with a PTA (Physical Therapist Assistant).</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+        <li class="plan">
+          <span class="tag">PTA instructor</span>
+          <h3>Private session</h3>
+          <p class="price">$460.00</p>
+          <p class="pack">5 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for 5 private Pilates sessions with a PTA (Physical Therapist Assistant).</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+        <li class="plan">
+          <span class="tag">PTA instructor</span>
+          <h3>Private session</h3>
+          <p class="price">$890.00</p>
+          <p class="pack">10 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for 10 private Pilates sessions with a PTA (Physical Therapist Assistant).</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+        <li class="plan">
+          <span class="tag">PTA instructor</span>
+          <h3>Private session</h3>
+          <p class="price">$1,305.00</p>
+          <p class="pack">15 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for 15 private Pilates sessions with a PTA (Physical Therapist Assistant).</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+        <li class="plan">
+          <span class="tag">PTA instructor</span>
+          <h3>Private session</h3>
+          <p class="price">$1,700.00</p>
+          <p class="pack">20 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for 20 private Pilates sessions with a PTA (Physical Therapist Assistant).</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+      </ul>
+        </div>
+        <div class="price-panel" role="tabpanel" id="pp-semi" aria-labelledby="pt-semi">
+      <ul class="plan-grid" data-level="l1">
+        <li class="plan">
+          <span class="tag">Level 1 instructor</span>
+          <h3>Semi-private session</h3>
+          <p class="price">$60.00</p>
+          <p class="pack">1 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for 1 semi-private session with a Level 1 Instructor.</p><p class="exp">Price is per person.</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+        <li class="plan">
+          <span class="tag">Level 1 instructor</span>
+          <h3>Semi-private session</h3>
+          <p class="price">$285.00</p>
+          <p class="pack">5 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for 5 semi-private sessions with a Level 1 Instructor.</p><p class="exp">Price is per person.</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+        <li class="plan">
+          <span class="tag">Level 1 instructor</span>
+          <h3>Semi-private session</h3>
+          <p class="price">$540.00</p>
+          <p class="pack">10 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for 10 semi-private sessions with a Level 1 Instructor.</p><p class="exp">Price is per person.</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+        <li class="plan">
+          <span class="tag">Level 1 instructor</span>
+          <h3>Semi-private session</h3>
+          <p class="price">$765.00</p>
+          <p class="pack">15 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for 15 semi-private sessions with a Level 1 Instructor.</p><p class="exp">Price is per person.</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+        <li class="plan">
+          <span class="tag">Level 1 instructor</span>
+          <h3>Semi-private session</h3>
+          <p class="price">$960.00</p>
+          <p class="pack">20 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for 20 semi-private sessions with a Level 1 Instructor.</p><p class="exp">Price is per person.</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+      </ul>
+      <ul class="plan-grid" data-level="pta">
+        <li class="plan">
+          <span class="tag">PTA instructor</span>
+          <h3>Semi-private session</h3>
+          <p class="price">$70.00</p>
+          <p class="pack">1 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for 1 semi-private Pilates session with a PTA (Physical Therapist Assistant).</p><p class="exp">Price is per person.</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+        <li class="plan">
+          <span class="tag">PTA instructor</span>
+          <h3>Semi-private session</h3>
+          <p class="price">$333.00</p>
+          <p class="pack">5 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for 5 semi-private Pilates sessions with a PTA (Physical Therapist Assistant).</p><p class="exp">Price is per person.</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+        <li class="plan">
+          <span class="tag">PTA instructor</span>
+          <h3>Semi-private session</h3>
+          <p class="price">$640.00</p>
+          <p class="pack">10 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for 10 semi-private Pilates sessions with a PTA (Physical Therapist Assistant).</p><p class="exp">Price is per person.</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+        <li class="plan">
+          <span class="tag">PTA instructor</span>
+          <h3>Semi-private session</h3>
+          <p class="price">$930.00</p>
+          <p class="pack">15 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for 15 semi-private Pilates sessions with a PTA (Physical Therapist Assistant).</p><p class="exp">Price is per person.</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+        <li class="plan">
+          <span class="tag">PTA instructor</span>
+          <h3>Semi-private session</h3>
+          <p class="price">$1,200.00</p>
+          <p class="pack">20 pack</p>
+          <hr>
+          <div class="plan-body"><p>Redeemable for 20 semi-private Pilates sessions with a PTA (Physical Therapist Assistant).</p><p class="exp">Price is per person.</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+      </ul>
+        </div>
+        <div class="price-panel" role="tabpanel" id="pp-gift" aria-labelledby="pt-gift">
+      <ul class="plan-grid">
+        <li class="plan">
+          <h3>Gift Card</h3>
+          <p class="price">Any value</p>
+          <hr>
+          <div class="plan-body"><p>Gift someone special!</p></div>
+          <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/pricing/cards" target="_blank" rel="noopener" data-magnet>Buy Now<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+      </ul>
+        </div>
+        <p class="price-note">Buy Now opens the studio&rsquo;s booking site in a new tab, where you choose your pack and check out.</p>
+      </div>
 
       <div class="apply reveal">
         <p class="eyebrow">Good to know</p>
@@ -2070,6 +2335,53 @@
         el.style.transform = '';
       });
     });
+  })();
+
+  // Pilates pricing: tabs by pack type; one instructor switch shared by Private and Semi-private.
+  (function () {
+    var root = document.querySelector('[data-pricing]');
+    if (!root) return;
+    var tabs = [].slice.call(root.querySelectorAll('[role="tab"]'));
+    var panels = [].slice.call(root.querySelectorAll('[role="tabpanel"]'));
+    var pick = root.querySelector('[data-instructor-pick]');
+    var levels = [].slice.call(pick.querySelectorAll('button[data-level]'));
+    var level = 'l1';
+    function showLevel() {
+      levels.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.level === level ? 'true' : 'false'); });
+      root.querySelectorAll('.plan-grid[data-level]').forEach(function (g) { g.hidden = g.dataset.level !== level; });
+    }
+    function select(tab, focus) {
+      var key = tab.id.replace('pt-', '');
+      tabs.forEach(function (t) {
+        var on = t === tab;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.tabIndex = on ? 0 : -1;
+      });
+      panels.forEach(function (p) {
+        var on = p.id === 'pp-' + key;
+        p.hidden = !on;
+        if (on) { p.classList.remove('is-fresh'); void p.offsetWidth; p.classList.add('is-fresh'); }
+      });
+      pick.hidden = !(key === 'private' || key === 'semi');
+      if (focus) tab.focus();
+    }
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { select(t); });
+      t.addEventListener('keydown', function (e) {
+        var n = null;
+        if (e.key === 'ArrowRight') n = tabs[(i + 1) % tabs.length];
+        else if (e.key === 'ArrowLeft') n = tabs[(i - 1 + tabs.length) % tabs.length];
+        else if (e.key === 'Home') n = tabs[0];
+        else if (e.key === 'End') n = tabs[tabs.length - 1];
+        if (n) { e.preventDefault(); select(n, true); }
+      });
+    });
+    levels.forEach(function (b) {
+      b.addEventListener('click', function () { level = b.dataset.level; showLevel(); });
+    });
+    showLevel();
+    select(tabs[0]);
+    panels.forEach(function (p) { p.classList.remove('is-fresh'); });
   })();
 
   // Mobile menu.

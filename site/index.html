@@ -1298,6 +1298,18 @@
   /* four slides stacked in the circle; one is visible, the next fades over it */
   .bubble-photo img { position: absolute; inset: 0; opacity: 0; transition: opacity 1400ms var(--ease-std); transform: scale(var(--z, 1)); }
   .bubble-photo img.is-active { opacity: 1; }
+
+  /* ---- Scheduler card: a quiet gold pulse that invites the first tap ---- */
+  .sched { outline: 2px solid rgba(184, 147, 90, 0); outline-offset: 0; }
+  @keyframes sched-pulse {
+    0%   { outline-color: rgba(184, 147, 90, 0.55); outline-offset: 0; }
+    65%  { outline-color: rgba(184, 147, 90, 0);    outline-offset: 14px; }
+    100% { outline-color: rgba(184, 147, 90, 0);    outline-offset: 14px; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html.js .sched { animation: card-in 300ms ease-out 220ms both, sched-pulse 3s ease-out 1.4s infinite; }
+    html.js .sched.is-engaged { animation: none; }
+  }
   @media (prefers-reduced-motion: reduce) { .bubble-photo img { transition: none; } }
   .bubble-dot.d1 { left: -3%; top: 62%; }
   .bubble-dot.d2 { z-index: 2; }
@@ -2476,6 +2488,15 @@
     apply();
     window.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule);
+  })();
+
+  // Scheduler pulse: stop it once the visitor starts using the card.
+  (function () {
+    var card = document.querySelector('.sched');
+    if (!card) return;
+    function engaged() { card.classList.add('is-engaged'); }
+    card.addEventListener('pointerdown', engaged, { once: true });
+    card.addEventListener('keydown', engaged, { once: true });
   })();
 
   // Mobile menu.
