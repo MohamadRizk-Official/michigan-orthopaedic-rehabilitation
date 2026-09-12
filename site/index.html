@@ -1273,7 +1273,8 @@
     .rv-card[data-pos="1"]  { transform: translateX(104%) scale(1); opacity: 0; visibility: hidden; pointer-events: none; }
     .rv-quote { font-size: 1.0625rem; line-height: 1.55; }
     .rv-stars { width: 118px; height: 22px; }
-    .rv-ctl { margin-top: 1rem; }
+    .rv-ctl { margin-top: 1rem; justify-content: center; }
+    .rv-btn { display: none; }   /* phones: swipe and the dots do the job; no half-clipped arrows at the edges */
     .reviews-actions { margin-top: 1.25rem; }
     .reviews-actions .btn { width: 100%; }
   }
@@ -1465,13 +1466,13 @@
   </div>
   <nav class="mobile-menu" id="mobile-menu" aria-label="Mobile" hidden>
     <a href="#schedule">Schedule an appointment</a>
-    <a href="#" target="_blank" rel="noopener">Pay bill <small>opens in a new tab</small></a>
     <a href="#locations">Locations &amp; hours</a>
-    <a href="#insurance" data-spy="#insurance">Insurance</a>
+    <a href="#insurance">Insurance</a>
     <a href="/services">Services</a>
     <a href="/pilates">Pilates studio</a>
-    <a href="/team" data-spy="#team">Our team</a>
+    <a href="/team">Our team</a>
     <a href="/careers">Careers</a>
+    <a href="#" target="_blank" rel="noopener">Pay bill <small>opens in a new tab</small></a>
     <a href="https://miorthosurgeons.com/" target="_blank" rel="noopener">Surgeons <small>opens in a new tab</small></a>
     <a href="tel:+12485663525">Call Royal Oak <small>(248) 566-3525</small></a>
     <a href="tel:+12488176110">Call Troy <small>(248) 817-6110</small></a>
@@ -2326,6 +2327,11 @@
     document.querySelectorAll('a[href="#schedule"]').forEach(function (a) {
       a.addEventListener('click', function (e) {
         e.preventDefault();
+        var menu = document.getElementById('mobile-menu'), toggle = document.querySelector('.nav-toggle');
+        if (menu && !menu.hidden) {
+          menu.hidden = true;
+          if (toggle) { toggle.setAttribute('aria-expanded', 'false'); toggle.setAttribute('aria-label', 'Open menu'); }
+        }
         document.dispatchEvent(new CustomEvent('mor:wizard-reset'));
         var top = card.getBoundingClientRect().top + window.scrollY - 96;
         window.scrollTo({ top: top, behavior: 'smooth' });
