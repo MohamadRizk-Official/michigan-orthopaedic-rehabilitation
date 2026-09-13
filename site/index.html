@@ -340,9 +340,9 @@
   .team { order: 5; }
   .reviews { order: 6; }
   @media (min-width: 901px) {
-    .services { order: 2; }
-    .conditions { order: 3; }
-    .locations { order: 1; }
+    .services { order: 1; }
+    .conditions { order: 2; }
+    .locations { order: 3; }
     .team { order: 4; }
     .reviews { order: 5; }
     .insurance { order: 6; }
@@ -534,7 +534,7 @@
   @keyframes float { 0%, 100% { translate: 0 0; } 50% { translate: 0 var(--float-y, -18px); } }
 
   /* Services teaser (homepage) */
-  .services { padding: var(--section) 0; }
+  .services { padding: 3rem 0 var(--section); }
   .services-teaser { display: grid; grid-template-columns: 1fr; gap: 2.5rem; align-items: center; }
   .services-copy { max-width: 46em; }
   .services-copy h2 { margin-bottom: 1.1rem; }
@@ -832,7 +832,7 @@
   @media (min-width: 1101px) { .team-grid > .member { flex: 0 0 calc((100% - 4.5rem) / 4); } }
 
   /* Locations */
-  .locations { padding: 3rem 0 3rem; }
+  .locations { padding: var(--section) 0 3rem; }
   .locations-head { max-width: 40em; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
   .locations-head h2 { margin-bottom: 1.1rem; }
   .office-picker { margin-bottom: 1.25rem; }
