@@ -94,10 +94,10 @@
     pointer-events: none;
     /* Warm ivory ground. A wide, very low-contrast pool sits behind the headline
        (top left) and the base deepens toward the edges, so it reads as depth rather
-       than as a pattern. The last 240px dissolve into white so the section below
-       starts clean. */
+       than as a pattern. The last 180px dissolve into white, so the ground ends with the
+       hero and the section below starts on white. */
     background:
-      linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) calc(100% - 240px), #FFFFFF 100%),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) calc(100% - 180px), #FFFFFF 100%),
       radial-gradient(110% 85% at 20% 14%, rgba(255, 253, 248, 0.9) 0%, rgba(255, 253, 248, 0) 58%),
       linear-gradient(145deg, #F7F3EC 0%, #F4EEE3 55%, #F0E9DC 100%);
   }
@@ -355,7 +355,7 @@
   /* Hero */
   .hero {
     position: relative;
-    padding: clamp(3.5rem, 7vw, 6.5rem) 0 clamp(2rem, 5vw, 4rem);
+    padding: clamp(3.5rem, 7vw, 6.5rem) 0 clamp(2rem, 3vw, 2.5rem);
     overflow: hidden;
   }
   /* The hero ground lives on a layer under the particle canvas (see .hero-bg) so the
@@ -832,7 +832,7 @@
   @media (min-width: 1101px) { .team-grid > .member { flex: 0 0 calc((100% - 4.5rem) / 4); } }
 
   /* Locations */
-  .locations { padding: calc(var(--section) + 2rem) 0 3rem; }
+  .locations { padding: 3rem 0 3rem; }
   .locations-head { max-width: 40em; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
   .locations-head h2 { margin-bottom: 1.1rem; }
   .office-picker { margin-bottom: 1.25rem; }
@@ -1299,27 +1299,51 @@
   .bubble-photo img { position: absolute; inset: 0; opacity: 0; transition: opacity 1400ms var(--ease-std); transform: scale(var(--z, 1)); }
   .bubble-photo img.is-active { opacity: 1; }
 
-  /* ---- Scheduler card: a navy ring breathes outward to invite the first tap.
-     Drawn on a wrapper (the card clips its own overflow) and animated with transform + opacity
-     only, so it stays sub-pixel smooth. --hx/--hy are set by script from the card's size so the
-     ring travels a fixed distance in px on every axis and never reaches the copy beside it. ---- */
+  /* ---- Scheduler card: two soft blue rings breathe outward, one after the other, to invite the
+     first tap. Drawn on a wrapper (the card clips its own overflow) and animated with transform +
+     opacity only, so they stay sub-pixel smooth. --hx/--hy are set by script from the card's size
+     so each ring travels a fixed distance in px and never reaches the copy beside it. ---- */
   .sched-halo { position: relative; min-width: 0; border-radius: 20px; }
-  .sched-halo::before {
+  .sched-halo::before, .sched-halo::after {
     content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
-    border: 2px solid rgba(15, 31, 69, 0.55); opacity: 0;
+    border: 2px solid rgba(88, 134, 204, 0.8); opacity: 0;
     transform-origin: center; will-change: transform, opacity;
   }
   @keyframes sched-halo {
     0%   { opacity: 0;    transform: scale(1, 1); }
-    10%  { opacity: 0.6; }
-    72%  { opacity: 0;    transform: scale(var(--hx, 1.05), var(--hy, 1.06)); }
+    7%   { opacity: 0.75; }
+    36%  { opacity: 0;    transform: scale(var(--hx, 1.05), var(--hy, 1.06)); }
     100% { opacity: 0;    transform: scale(var(--hx, 1.05), var(--hy, 1.06)); }
   }
   @media (prefers-reduced-motion: no-preference) {
-    html.js .sched-halo::before { animation: sched-halo 3.4s cubic-bezier(0.22, 0.61, 0.36, 1) 1.6s infinite; }
-    html.js .sched-halo.is-engaged::before { animation: none; }
+    html.js .sched-halo::before { animation: sched-halo 4.4s cubic-bezier(0.22, 0.61, 0.36, 1) 1.6s infinite; }
+    html.js .sched-halo::after  { animation: sched-halo 4.4s cubic-bezier(0.22, 0.61, 0.36, 1) 2.7s infinite; }
+    html.js .sched-halo.is-engaged::before, html.js .sched-halo.is-engaged::after { animation: none; }
   }
 
+
+
+  /* ---- Reviews: a Google G in each card's top-right corner ---- */
+  .rv-g { position: absolute; top: clamp(1.1rem, 2.6vw, 1.75rem); right: clamp(1.1rem, 2.6vw, 1.75rem); width: 24px; height: 24px; }
+  .rv-g svg { display: block; width: 100%; height: 100%; }
+  @media (max-width: 800px) { .rv-g { top: 1.15rem; right: 1.15rem; width: 22px; height: 22px; } }
+
+  /* ---- Google reviews button: a ring in Google's four colours turns slowly around it ---- */
+  @property --ga { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+  .btn-google { position: relative; background: var(--surface); }
+  .btn-google, .btn-google:hover, .btn-google:focus-visible { border-color: transparent; }
+  .btn-google::before {
+    content: ""; position: absolute; inset: -2px; border-radius: calc(var(--radius) + 2px); padding: 2px;
+    background: conic-gradient(from var(--ga), #4285F4, #EA4335, #FBBC05, #34A853, #4285F4);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude;
+    opacity: 0.55; pointer-events: none;
+    transition: opacity var(--dur-fast) var(--ease-std);
+  }
+  @keyframes ga-spin { to { --ga: 360deg; } }
+  @media (prefers-reduced-motion: no-preference) { .btn-google::before { animation: ga-spin 4s linear infinite; } }
+  .btn-google:hover::before, .btn-google:focus-visible::before { opacity: 1; }
+  .btn-google:hover, .btn-google:focus-visible { background: var(--surface); box-shadow: 0 8px 22px -10px rgba(66, 133, 244, 0.45); }
   @media (prefers-reduced-motion: reduce) { .bubble-photo img { transition: none; } }
   .bubble-dot.d1 { left: -3%; top: 62%; }
   .bubble-dot.d2 { z-index: 2; }
@@ -1648,51 +1672,61 @@
       <div class="rv reveal" id="rv" aria-roledescription="carousel" aria-label="Patient reviews">
         <ul class="rv-track" id="rv-track" aria-live="polite">
         <li class="rv-card" data-pos="x" data-i="0" aria-roledescription="slide" aria-label="Review 1 of 10">
+          <span class="rv-g" role="img" aria-label="Google review"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285F4" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#EA4335" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#34A853" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#FBBC05" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg></span>
           <div class="rv-stars" role="img" aria-label="5 out of 5 stars"></div>
           <blockquote class="rv-quote">Because I was always seen personally by Tim or Jeannette, they were able to closely monitor my performance and adjust my treatment accordingly. They made me feel like I was the most important patient at the clinic.</blockquote>
           <p class="rv-who"><strong>B.A.</strong></p>
         </li>
         <li class="rv-card" data-pos="x" data-i="1" aria-roledescription="slide" aria-label="Review 2 of 10">
+          <span class="rv-g" role="img" aria-label="Google review"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285F4" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#EA4335" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#34A853" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#FBBC05" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg></span>
           <div class="rv-stars" role="img" aria-label="5 out of 5 stars"></div>
           <blockquote class="rv-quote">My appointments always began promptly, sessions were flexible, and atmosphere was relaxed yet very professional. I am very pleased with my results and gained complete functional use of my arm.</blockquote>
           <p class="rv-who"><strong>M.M.</strong><span>Bloomfield, MI</span></p>
         </li>
         <li class="rv-card" data-pos="x" data-i="2" aria-roledescription="slide" aria-label="Review 3 of 10">
+          <span class="rv-g" role="img" aria-label="Google review"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285F4" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#EA4335" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#34A853" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#FBBC05" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg></span>
           <div class="rv-stars" role="img" aria-label="5 out of 5 stars"></div>
           <blockquote class="rv-quote">When I started my therapy sessions I never thought I would be able to take care of my needs. It was quite a transformation! The entire staff at Michigan Orthopedic Rehabilitation demonstrated total commitment and created a caring environment.</blockquote>
           <p class="rv-who"><strong>D.B.</strong><span>Southfield, MI</span></p>
         </li>
         <li class="rv-card" data-pos="x" data-i="3" aria-roledescription="slide" aria-label="Review 4 of 10">
+          <span class="rv-g" role="img" aria-label="Google review"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285F4" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#EA4335" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#34A853" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#FBBC05" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg></span>
           <div class="rv-stars" role="img" aria-label="5 out of 5 stars"></div>
           <blockquote class="rv-quote">From my first visit to the last, the entire staff showed concern about me, and made my health their number one priority. My rehabbed shoulder feels 99% back to normal, and in just 5 short months!</blockquote>
           <p class="rv-who"><strong>C.R.</strong><span>Sterling Heights, MI</span></p>
         </li>
         <li class="rv-card" data-pos="x" data-i="4" aria-roledescription="slide" aria-label="Review 5 of 10">
+          <span class="rv-g" role="img" aria-label="Google review"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285F4" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#EA4335" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#34A853" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#FBBC05" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg></span>
           <div class="rv-stars" role="img" aria-label="5 out of 5 stars"></div>
           <blockquote class="rv-quote">These are professionals who truly care about patients and get excited to see progress in their recovery. The atmosphere at the office is both friendly and welcoming.</blockquote>
           <p class="rv-who"><strong>J.B.</strong><span>Bloomfield Hills, MI</span></p>
         </li>
         <li class="rv-card" data-pos="x" data-i="5" aria-roledescription="slide" aria-label="Review 6 of 10">
+          <span class="rv-g" role="img" aria-label="Google review"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285F4" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#EA4335" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#34A853" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#FBBC05" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg></span>
           <div class="rv-stars" role="img" aria-label="5 out of 5 stars"></div>
           <blockquote class="rv-quote">When I originally arrived I could not hold a pencil, today I have full control of my hand and fingers. I can write fluently, regained full range of motion of my shoulder, and can bend my elbow almost all the way to my nose.</blockquote>
           <p class="rv-who"><strong>P.K.</strong><span>Beverly Hills, MI</span></p>
         </li>
         <li class="rv-card" data-pos="x" data-i="6" aria-roledescription="slide" aria-label="Review 7 of 10">
+          <span class="rv-g" role="img" aria-label="Google review"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285F4" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#EA4335" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#34A853" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#FBBC05" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg></span>
           <div class="rv-stars" role="img" aria-label="5 out of 5 stars"></div>
           <blockquote class="rv-quote">I came here with practically no movement in my arm, and after three months I certainly can see a great improvement. It hasn’t been easy, but it was well worth it.</blockquote>
           <p class="rv-who"><strong>B.S.</strong></p>
         </li>
         <li class="rv-card" data-pos="x" data-i="7" aria-roledescription="slide" aria-label="Review 8 of 10">
+          <span class="rv-g" role="img" aria-label="Google review"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285F4" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#EA4335" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#34A853" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#FBBC05" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg></span>
           <div class="rv-stars" role="img" aria-label="5 out of 5 stars"></div>
           <blockquote class="rv-quote">It is very important to have a good rehab center; one you can trust to get you back on your feet. I would recommend Michigan Orthopedic Rehab center.</blockquote>
           <p class="rv-who"><strong>F.D.</strong><span>Berkley, MI</span></p>
         </li>
         <li class="rv-card" data-pos="x" data-i="8" aria-roledescription="slide" aria-label="Review 9 of 10">
+          <span class="rv-g" role="img" aria-label="Google review"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285F4" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#EA4335" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#34A853" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#FBBC05" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg></span>
           <div class="rv-stars" role="img" aria-label="5 out of 5 stars"></div>
           <blockquote class="rv-quote">The staff at MI Orthopedic Rehab is very knowledgeable and took my limitations very seriously. Tim and Jen Wiater sincerely cared about my recovery and I whole-heartedly thank them for their great work.</blockquote>
           <p class="rv-who"><strong>R.P.</strong></p>
         </li>
         <li class="rv-card" data-pos="x" data-i="9" aria-roledescription="slide" aria-label="Review 10 of 10">
+          <span class="rv-g" role="img" aria-label="Google review"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285F4" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#EA4335" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#34A853" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#FBBC05" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg></span>
           <div class="rv-stars" role="img" aria-label="5 out of 5 stars"></div>
           <blockquote class="rv-quote">I have been to a few physical therapy centers prior to coming here and I would recommend MI Orthopedic Rehab to as many people as I can.</blockquote>
           <p class="rv-who"><strong>E.C.</strong><span>Clawson, MI</span></p>
@@ -1705,7 +1739,7 @@
         </div>
       </div>
       <div class="reviews-actions reveal">
-        <a class="btn btn-outline" href="https://share.google/PME8n5t6SN4nc04kd" target="_blank" rel="noopener">See our reviews on Google <svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+        <a class="btn btn-outline btn-google" href="https://share.google/PME8n5t6SN4nc04kd" target="_blank" rel="noopener">See our reviews on Google <svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
       </div>
     </div>
   </section>
@@ -2374,7 +2408,7 @@
   (function () {
     var bg = document.querySelector('.hero-bg'), hero = document.querySelector('.hero');
     if (!bg || !hero) return;
-    function size() { bg.style.setProperty('--hero-h', (hero.getBoundingClientRect().bottom + window.scrollY + 240) + 'px'); }
+    function size() { bg.style.setProperty('--hero-h', (hero.getBoundingClientRect().bottom + window.scrollY) + 'px'); }
     size();
     window.addEventListener('resize', size);
     // The scheduler changes height as it moves between steps; follow it.
