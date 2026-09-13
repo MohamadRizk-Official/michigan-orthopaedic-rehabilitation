@@ -340,9 +340,9 @@
   .team { order: 5; }
   .reviews { order: 6; }
   @media (min-width: 901px) {
-    .services { order: 1; }
-    .conditions { order: 2; }
-    .locations { order: 3; }
+    .services { order: 2; }
+    .conditions { order: 3; }
+    .locations { order: 1; }
     .team { order: 4; }
     .reviews { order: 5; }
     .insurance { order: 6; }
@@ -534,7 +534,7 @@
   @keyframes float { 0%, 100% { translate: 0 0; } 50% { translate: 0 var(--float-y, -18px); } }
 
   /* Services teaser (homepage) */
-  .services { padding: calc(var(--section) + 2rem) 0 var(--section); }
+  .services { padding: var(--section) 0; }
   .services-teaser { display: grid; grid-template-columns: 1fr; gap: 2.5rem; align-items: center; }
   .services-copy { max-width: 46em; }
   .services-copy h2 { margin-bottom: 1.1rem; }
@@ -832,7 +832,7 @@
   @media (min-width: 1101px) { .team-grid > .member { flex: 0 0 calc((100% - 4.5rem) / 4); } }
 
   /* Locations */
-  .locations { padding: var(--section) 0 3rem; }
+  .locations { padding: calc(var(--section) + 2rem) 0 3rem; }
   .locations-head { max-width: 40em; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
   .locations-head h2 { margin-bottom: 1.1rem; }
   .office-picker { margin-bottom: 1.25rem; }
@@ -1299,17 +1299,27 @@
   .bubble-photo img { position: absolute; inset: 0; opacity: 0; transition: opacity 1400ms var(--ease-std); transform: scale(var(--z, 1)); }
   .bubble-photo img.is-active { opacity: 1; }
 
-  /* ---- Scheduler card: a quiet gold pulse that invites the first tap ---- */
-  .sched { outline: 2px solid rgba(184, 147, 90, 0); outline-offset: 0; }
-  @keyframes sched-pulse {
-    0%   { outline-color: rgba(184, 147, 90, 0.55); outline-offset: 0; }
-    65%  { outline-color: rgba(184, 147, 90, 0);    outline-offset: 14px; }
-    100% { outline-color: rgba(184, 147, 90, 0);    outline-offset: 14px; }
+  /* ---- Scheduler card: a navy ring breathes outward to invite the first tap.
+     Drawn on a wrapper (the card clips its own overflow) and animated with transform + opacity
+     only, so it stays sub-pixel smooth. --hx/--hy are set by script from the card's size so the
+     ring travels a fixed distance in px on every axis and never reaches the copy beside it. ---- */
+  .sched-halo { position: relative; min-width: 0; border-radius: 20px; }
+  .sched-halo::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    border: 2px solid rgba(15, 31, 69, 0.55); opacity: 0;
+    transform-origin: center; will-change: transform, opacity;
+  }
+  @keyframes sched-halo {
+    0%   { opacity: 0;    transform: scale(1, 1); }
+    10%  { opacity: 0.6; }
+    72%  { opacity: 0;    transform: scale(var(--hx, 1.05), var(--hy, 1.06)); }
+    100% { opacity: 0;    transform: scale(var(--hx, 1.05), var(--hy, 1.06)); }
   }
   @media (prefers-reduced-motion: no-preference) {
-    html.js .sched { animation: card-in 300ms ease-out 220ms both, sched-pulse 3s ease-out 1.4s infinite; }
-    html.js .sched.is-engaged { animation: none; }
+    html.js .sched-halo::before { animation: sched-halo 3.4s cubic-bezier(0.22, 0.61, 0.36, 1) 1.6s infinite; }
+    html.js .sched-halo.is-engaged::before { animation: none; }
   }
+
   @media (prefers-reduced-motion: reduce) { .bubble-photo img { transition: none; } }
   .bubble-dot.d1 { left: -3%; top: 62%; }
   .bubble-dot.d2 { z-index: 2; }
@@ -1507,6 +1517,7 @@
         </div>
       </div>
 
+      <div class="sched-halo">
       <div class="sched" role="region" aria-labelledby="sched-title">
         <div class="wiz-head">
           <span class="sched-step" id="wiz-label">Step 1 of 3</span>
@@ -1563,6 +1574,7 @@
             </div>
           </section>
         </div>
+      </div>
       </div>
     </div>
   </section>
@@ -2490,11 +2502,28 @@
     window.addEventListener('resize', schedule);
   })();
 
-  // Scheduler pulse: stop it once the visitor starts using the card.
+  // Scheduler ring: sized from the card so it travels a fixed distance (26px on desktop, 12px on
+  // phones) but never further than the room beside the card; stops for good once the card is used.
   (function () {
-    var card = document.querySelector('.sched');
-    if (!card) return;
-    function engaged() { card.classList.add('is-engaged'); }
+    var card = document.querySelector('.sched'), halo = card && card.closest('.sched-halo');
+    if (!card || !halo) return;
+    var hero = document.querySelector('.hero'), copy = document.querySelector('.hero-copy');
+    function size() {
+      var r = card.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      var phone = window.matchMedia('(max-width: 800px)').matches;
+      var want = phone ? 12 : 26, room = want;
+      if (hero) { var h = hero.getBoundingClientRect(); room = Math.min(room, h.right - r.right - 2, r.left - h.left - 2); }
+      if (copy && !phone) { var c = copy.getBoundingClientRect(); if (c.right <= r.left) room = Math.min(room, r.left - c.right - 8); }
+      var spread = Math.max(4, Math.min(want, room));
+      halo.style.setProperty('--hx', (1 + (2 * spread) / r.width).toFixed(4));
+      halo.style.setProperty('--hy', (1 + (2 * spread) / r.height).toFixed(4));
+      halo.dataset.spread = Math.round(spread);
+    }
+    size();
+    window.addEventListener('resize', size);
+    if (window.ResizeObserver) new ResizeObserver(size).observe(card);
+    function engaged() { halo.classList.add('is-engaged'); card.classList.add('is-engaged'); }
     card.addEventListener('pointerdown', engaged, { once: true });
     card.addEventListener('keydown', engaged, { once: true });
   })();
