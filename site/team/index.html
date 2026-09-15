@@ -1045,20 +1045,22 @@
   }
 
   /* Scroll reveal: opacity 0 to 1, 20px rise, 600ms expo-out, once. Only with JS. */
-  html.js .reveal {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out);
+  /* Scroll reveal: hidden until script marks it visible, then one animation plays and ends.
+     An animation (not a transition) so each element keeps its own hover transitions, and
+     fill-mode `backwards` holds the start pose through the stagger delay without pinning the
+     end pose afterwards. */
+  @keyframes reveal-up { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+  @keyframes reveal-section-up { from { opacity: 0; transform: translateY(60px); } to { opacity: 1; transform: none; } }
+  html.js .reveal:not(.is-visible), html.js .reveal-stagger > :not(.is-visible) { opacity: 0; }
+  html.js .reveal.is-visible, html.js .reveal-stagger > .is-visible {
+    animation: reveal-up 700ms var(--ease-out) var(--d, 0ms) backwards;
   }
-  html.js .reveal.is-visible { opacity: 1; transform: none; }
   /* Whole-section reveal: the block, its ground and everything in it move as one unit. */
-  html.js .reveal-section { transform: translateY(60px); transition: opacity 0.7s ease-out, transform 0.7s ease-out; }
-  html.js .reveal-stagger > * {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out);
+  html.js .reveal-section.is-visible { animation: reveal-section-up 700ms ease-out backwards; }
+  @media (prefers-reduced-motion: reduce) {
+    html.js .reveal:not(.is-visible), html.js .reveal-stagger > :not(.is-visible) { opacity: 1; }
+    html.js .reveal.is-visible, html.js .reveal-stagger > .is-visible, html.js .reveal-section.is-visible { animation: none; }
   }
-  html.js .reveal-stagger > .is-visible { opacity: 1; transform: none; transition-delay: var(--d, 0ms); }
 
   @keyframes hero-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
   html.js .hero-copy > * { animation: hero-in var(--dur-slow) var(--ease-out) both; }
