@@ -1049,11 +1049,11 @@
      An animation (not a transition) so each element keeps its own hover transitions, and
      fill-mode `backwards` holds the start pose through the stagger delay without pinning the
      end pose afterwards. */
-  @keyframes reveal-up { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+  @keyframes reveal-up { from { opacity: 0; } to { opacity: 1; } }
   @keyframes reveal-section-up { from { opacity: 0; transform: translateY(60px); } to { opacity: 1; transform: none; } }
   html.js .reveal:not(.is-visible), html.js .reveal-stagger > :not(.is-visible) { opacity: 0; }
   html.js .reveal.is-visible, html.js .reveal-stagger > .is-visible {
-    animation: reveal-up 700ms var(--ease-out) var(--d, 0ms) backwards;
+    animation: reveal-up 900ms cubic-bezier(0.25, 0.1, 0.25, 1) var(--d, 0ms) backwards;
   }
   /* Whole-section reveal: the block, its ground and everything in it move as one unit. */
   html.js .reveal-section.is-visible { animation: reveal-section-up 700ms ease-out backwards; }
@@ -1342,7 +1342,7 @@
   @media (min-width: 1001px) { .plan-grid { gap: 1.25rem; } .plan-grid > .plan { flex-basis: calc((100% - 2.5rem) / 3); } }
 
   .price-note { text-align: center; font-size: 0.875rem; color: var(--ink-3); margin-top: 1.25rem; }
-  @keyframes panel-in { from { opacity: 0; translate: 0 6px; } to { opacity: 1; translate: 0 0; } }
+  @keyframes panel-in { from { opacity: 0; } to { opacity: 1; } }
   @media (prefers-reduced-motion: no-preference) { .price-panel.is-fresh { animation: panel-in 260ms var(--ease-out) both; } }
   @media (prefers-reduced-motion: reduce) {
     .rv-card { transition: opacity 200ms linear; }
@@ -1776,10 +1776,10 @@
         </div>
       </div>
 
-      <div class="studio-cta reveal-stagger">
-        <h2>Ready to book?</h2>
-        <p class="contact">Call the studio at <a href="tel:+19474652355">(947) 465-2355</a> or email <a href="mailto:hello@bodymechanicsstudio.com">hello@bodymechanicsstudio.com</a>.</p>
-        <div class="actions">
+      <div class="studio-cta">
+        <h2 class="reveal">Ready to book?</h2>
+        <p class="contact reveal">Call the studio at <a href="tel:+19474652355">(947) 465-2355</a> or email <a href="mailto:hello@bodymechanicsstudio.com">hello@bodymechanicsstudio.com</a>.</p>
+        <div class="actions reveal-stagger">
           <a class="btn btn-primary" href="https://app.arketa.co/iframe/bodymechanics/schedule?template=dcXju1sIFH11eHbvKOmE&amp;showPrivate=true" target="_blank" rel="noopener" data-magnet>Book a class</a>
           <a class="btn btn-outline" href="tel:+19474652355">Call the studio</a>
         </div>
